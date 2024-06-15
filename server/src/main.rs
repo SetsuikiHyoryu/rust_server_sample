@@ -1,4 +1,4 @@
-use std::io::Result;
+use std::io::{Read, Result, Write};
 use std::net::{TcpListener, TcpStream};
 
 fn main() -> Result<()> {
@@ -15,13 +15,25 @@ fn main() -> Result<()> {
     // `listener.incoming()` 返回一个迭代器，这个迭代器会监听每个连接。
     // 每个连接都是一个字节流，其类型为 `TcpStream`。
     for stream in listener.incoming() {
-        handle_client(stream?);
+        handle_client(stream?)?;
     }
 
     Ok(())
 }
 
-fn handle_client(stream: TcpStream) {
-    let _stream = stream;
-    println!("Connection established!")
+fn handle_client(mut stream: TcpStream) -> Result<()> {
+    println!("Connection established!");
+
+    let mut buffer = [0; 1024];
+
+    // 将接受到的数据写入 buffer
+    // `read` 有中断的风险，但 `read_exact` 在 buffer 读满之前会阻塞，需要按需选择。
+    // stream.read_exact(&mut buffer)?;
+    let _bytes_length = stream.read(&mut buffer)?;
+
+    // 将 buffer 中的数据作为响应发送
+    // `write` / `write_all` 的关系同 `read` / `read_exact`。
+    stream.write_all(&buffer)?;
+
+    Ok(())
 }
