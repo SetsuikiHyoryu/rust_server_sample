@@ -67,7 +67,7 @@ impl Handler for StaticPageHandler {
 
                     HttpResonse::new("200", Some(headers), Some(contents))
                 }
-                None => HttpResonse::default(),
+                None => HttpResonse::new("404", None, Self::load_file("404.html")),
             },
         };
 
@@ -99,18 +99,23 @@ impl WebServiceHandler {
 
 impl Handler for WebServiceHandler {
     fn handler(request: &HttpRequest) -> HttpResonse {
+        let default_response = HttpResonse::new("404", None, Self::load_file("404.html"));
+
         let Resource::Path(url) = &request.resource;
         let url = url.split('/').collect::<Vec<&str>>();
-        let is_orders = url.len() > 3 && url[3] == "orders";
+
+        if url.len() < 4 {
+            return default_response;
+        }
 
         match url[2] {
-            "shipping" if is_orders => {
+            "shipping" if url[3] == "orders" => {
                 let headers = HashMap::from([("Content-Type", "application/json")]);
                 let body = serde_json::to_string(&Self::load_json()).unwrap();
                 HttpResonse::new("200", Some(headers), Some(body))
             }
 
-            _ => HttpResonse::new("404", None, Self::load_file("404.html")),
+            _ => default_response,
         }
     }
 }

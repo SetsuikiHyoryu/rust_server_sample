@@ -13,7 +13,7 @@ impl<'a> Server<'a> {
 
     pub fn run(&self) {
         let listener = TcpListener::bind(self.socket_address).unwrap();
-        println!("Running on {}", self.socket_address);
+        println!("Running on http://{}", self.socket_address);
 
         for stream in listener.incoming() {
             println!("Connection established!");
