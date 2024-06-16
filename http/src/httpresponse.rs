@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Write};
+use std::{collections::HashMap, io::Write};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct HttpResonse<'a> {
@@ -73,15 +73,13 @@ impl<'a> HttpResonse<'a> {
     ///
     /// ## 参数
     ///
-    /// - `writer` - 实现了 Write trait 的 TCP Stream。
-    pub fn send_response(&self, writer: &mut impl Write) -> Result<(), Self> {
+    /// - `stream` - 实现了 Write trait 的 TCP Stream。
+    pub fn send_response(&self, stream: &mut impl Write) {
         let response = self.clone();
         let response = String::from(response);
 
         // 将字符串式响应发送给 TCP Stream
-        let _ = write!(writer, "{}", response);
-
-        Ok(())
+        let _ = write!(stream, "{}", response);
     }
 
     fn version(&self) -> &str {
@@ -97,15 +95,9 @@ impl<'a> HttpResonse<'a> {
     }
 
     fn headers(&self) -> String {
-        let headers = match &self.headers {
-            Some(data) => data,
-            None => {
-                panic!("Fail to access headers.");
-            }
-        };
-
         let mut result = String::new();
 
+        let headers = &self.headers.clone().unwrap_or_default();
         for (key, value) in headers.iter() {
             result = format!("{}{}: {}\r\n", result, key, value);
         }
