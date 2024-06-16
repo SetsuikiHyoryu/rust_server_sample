@@ -1,5 +1,5 @@
 [package]
-name = "full_rust_web"
+name = "rust_server_sample"
 version = "0.1.0"
 edition = "2021"
 

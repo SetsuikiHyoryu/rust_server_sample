@@ -1,4 +1,4 @@
-# Rust 全栈式开发 Web 应用
+# Rust TCP/HTTP Socket Server
 
 ## 目录结构
 
@@ -9,7 +9,55 @@
 | http       | HTTP 模块目录   |
 | httpserver | HTTP 服务器目录 |
 
-## 工作流
+## 运行方式
+
+### TCP 服务器
+
+#### 启动 TCP 服务器
+
+```shell
+# `--package` or `-p`
+cargo run --package tcpserver
+```
+
+#### 运行 TCP 客户端访问服务器
+
+```shell
+# `--package` or `-p`
+cargo run --package tcpclient
+```
+
+执行成功后终端中会打印：  
+`Response from server: "Hello"`
+
+### HTTP 服务器
+
+#### 启动 HTTP 服务器
+
+```shell
+# `--package` or `-p`
+# 运行于 http://localhost:8000
+cargo run --package httpserver
+```
+
+#### 暴露的 HTTP 接口
+
+| 接口                                                                       | 响应        |
+| -------------------------------------------------------------------------- | ----------- |
+| <http://localhost:8000>                                                    | index.html  |
+| <http://localhost:8000/health>                                             | health.html |
+| <http://localhost:8000/style.css>                                          | style.css   |
+| <http://localhost:8000/api/shipping/orders>                                | orders.json |
+| <http://localhost:8000/anyelse>（“anyelse” 可改为接口中未列出的任意文字 ） | 404.html    |
+
+#### HTTP 模块单元测试
+
+```shell
+# `--package` or `-p`
+cargo test --package http
+```
+
+## 制作流程
 
 ### 1. 创建 Workspace
 

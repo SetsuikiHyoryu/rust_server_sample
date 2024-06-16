@@ -25,7 +25,7 @@ fn handle_response(mut stream: TcpStream) -> Result<()> {
     let _bypes_length = stream.read(&mut buffer)?;
 
     let response = str::from_utf8(&buffer);
-    println!("Response from server: {:?}", response);
+    println!("Response from server: {:?}", response.unwrap());
 
     Ok(())
 }
