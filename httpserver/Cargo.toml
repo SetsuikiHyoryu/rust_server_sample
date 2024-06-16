@@ -4,3 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+# 引用本地依赖
+# See: https://rustwiki.org/zh-CN/rust-by-example/cargo/deps.html
+http = { path = "../http" }
